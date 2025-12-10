@@ -1,4 +1,4 @@
-# 🌍 Minecraft World Generator — Генерация мира на основе сидов
+# Minecraft World Generator — Генерация мира на основе сидов
 ![C#](https://img.shields.io/badge/c%23-%23239120.svg?style=for-the-badge&logo=csharp&logoColor=white) ![Windows 11](https://img.shields.io/badge/Windows%2011-%230079d5.svg?style=for-the-badge&logo=Windows%2011&logoColor=white) ![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white) ![Swagger](https://img.shields.io/badge/-Swagger-%23Clojure?style=for-the-badge&logo=swagger&logoColor=white) 
 
 ##  Описание проекта
@@ -31,13 +31,13 @@ cd <repo>
 dotnet run
 ```
 
-#### 🐳 Запуск в Docker
+#### Запуск в Docker
 ```bash
 docker build -t minecraft-generator .
 docker run -p 5000:80 minecraft-generator
 ```
 
-### 👥 Команда проекта
+### Команда проекта
 
 Гафарова Камилла — гр. 11.1-521
 
@@ -47,6 +47,6 @@ docker run -p 5000:80 minecraft-generator
 
 Гафеев Глеб — гр. 11.1-522
 
-### 📄 Лицензия
+### Лицензия
 
 GNU GENERAL PUBLIC LICENSE                     Version 3
