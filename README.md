@@ -31,14 +31,18 @@ cd <repo>
 dotnet run
 ```
 
-Далее можно обратиться по url: http://localhost/swagger/index.html , где откроется документация swagger. Далее можно обратиться по эндпоинту GET /generate?seed=123&algorythm= . По умолчанию выбран алгоритм XorShift64Random, для seed значением по умолчанию является текущее время в среде. В ответ придет zip-файл, который можно интегрировать в папку .mnecraft/worlds.
+Далее можно обратиться по url: http://localhost/swagger/index.html , где откроется документация swagger. Далее можно обратиться по эндпоинту:
+GET /generate?seed=&algorythm=&cordX=&cordY&chunks=
+По умолчанию выбран алгоритм XorShift64Random, для seed значением по умолчанию является текущее время в среде. cordX&cordY отвечают за начальную точку генерации, chunks описывает количество генерируемых чанков от центрального. В ответ придет zip-файл, который можно интегрировать в папку .mnecraft/worlds.
 
 #### Запуск в Docker
 ```bash
 docker build -t minecraft-generator .
 docker run -p 5000:80 minecraft-generator
 ```
-Далее можно обратиться по url: http://localhost/swagger/index.html , где откроется документация swagger. Далее можно обратиться по эндпоинту GET /generate?seed=&algorythm= . По умолчанию выбран алгоритм XorShift64Random, для seed значением по умолчанию является текущее время в среде. В ответ придет zip-файл, который можно интегрировать в папку .mnecraft/worlds.
+Далее можно обратиться по url: http://localhost/swagger/index.html , где откроется документация swagger. Далее можно обратиться по эндпоинту:
+GET /generate?seed=&algorythm=&cordX=&cordY&chunks= 
+По умолчанию выбран алгоритм XorShift64Random, для seed значением по умолчанию является текущее время в среде. cordX&cordY отвечают за начальную точку генерации, chunks описывает количество генерируемых чанков от центрального. В ответ придет zip-файл, который можно интегрировать в папку .mnecraft/worlds.
 
 ### Команда проекта
 
