@@ -57,7 +57,7 @@ GET /generate
 
 #### Пример запроса
 ```http
-GET /generate?seed=exampleSeed&algorythm=XorShift64Random&cordX=0&cordZ=0&chunks=8
+GET /generate?seed=exampleSeed&algorythm=XorShift64Random&coordX=0&coordZ=0&chunks=8
 ```
 Если параметры seed и algorythm не указаны, используются значения по умолчанию:
 - алгоритм — `XorShift64Random`
