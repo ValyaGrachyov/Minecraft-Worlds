@@ -49,15 +49,15 @@ GET /generate
 |--------|---------|
 | `seed` | Сид генерации (строка до 256 символов, допускаются буквы, цифры и символы). Если не указан — используется текущее время в формате Unix timestamp |
 | `algorythm` | Алгоритм PRNG. Доступные значения:<br/>• `XorShift64Random` (по умолчанию)<br/>• `PerlinNoise`<br/>• `MersenneTwister` |
-| `cordX` | Координата X начальной точки генерации |
-| `cordY` | Координата Y начальной точки генерации |
+| `coordX` | Координата X начальной точки генерации |
+| `coordZ` | Координата Z начальной точки генерации |
 | `chunks` | Радиус генерации в чанках относительно начальной точки |
 
 ---
 
 #### Пример запроса
 ```http
-GET /generate?seed=exampleSeed&algorythm=XorShift64Random&cordX=0&cordY=0&chunks=8
+GET /generate?seed=exampleSeed&algorythm=XorShift64Random&cordX=0&cordZ=0&chunks=8
 ```
 Если параметры seed и algorythm не указаны, используются значения по умолчанию:
 - алгоритм — `XorShift64Random`
