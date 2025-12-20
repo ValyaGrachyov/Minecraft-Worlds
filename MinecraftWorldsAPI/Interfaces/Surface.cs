@@ -1,3 +1,4 @@
+using MinecraftWorldsAPI.Interfaces.biome;
 using MinecraftWorldsAPI.Models;
 
 namespace MinecraftWorldsAPI.Interfaces;

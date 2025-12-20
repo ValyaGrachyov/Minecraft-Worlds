@@ -1,3 +1,5 @@
+using MinecraftWorldsAPI.Interfaces.biome;
+using MinecraftWorldsAPI.Interfaces.noise;
 using MinecraftWorldsAPI.Models;
 
 namespace MinecraftWorldsAPI.Interfaces;
@@ -42,4 +44,6 @@ public class WorldGeneratorExample(
 
         return chunk;
     }
+    
+    
 }
