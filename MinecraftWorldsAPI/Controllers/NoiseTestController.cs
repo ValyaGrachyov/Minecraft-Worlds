@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using MinecraftWorldsAPI.Implementations;
+using MinecraftWorldsAPI.Interfaces;
 using MinecraftWorldsAPI.Models;
 
 namespace MinecraftWorldsAPI.Controllers;
@@ -10,6 +11,12 @@ namespace MinecraftWorldsAPI.Controllers;
 [Tags("Noise Testing")]
 public class NoiseTestController : ControllerBase
 {
+    private readonly IRandomFactory _randomFactory;
+
+    public NoiseTestController(IRandomFactory randomFactory)
+    {
+        _randomFactory = randomFactory;
+    }
     /// <summary>
     /// Тестирование 2D шума с визуализацией
     /// </summary>
@@ -28,7 +35,7 @@ public class NoiseTestController : ControllerBase
         [FromQuery] double frequency = 0.1,
         [FromQuery] int octaves = 4)
     {
-        var noise2D = new PerlinNoise2D(seed, frequency, 1.0, octaves, 2.0, 0.5);
+        var noise2D = new PerlinNoise2D(_randomFactory, seed, frequency, 1.0, octaves, 2.0, 0.5);
         var result = new NoiseTestResult();
 
         var values = new List<List<double>>();
@@ -101,7 +108,7 @@ public class NoiseTestController : ControllerBase
         [FromQuery] double frequency = 0.1,
         [FromQuery] int octaves = 4)
     {
-        var noise3D = new PerlinNoise(seed, frequency, 1.0, octaves, 2.0, 0.5);
+        var noise3D = new PerlinNoise(_randomFactory, seed, frequency, 1.0, octaves, 2.0, 0.5);
         var result = new NoiseTestResult();
 
         var values = new List<List<double>>();
@@ -159,7 +166,7 @@ public class NoiseTestController : ControllerBase
         [FromQuery] int steps = 20,
         [FromQuery] double stepSize = 0.1)
     {
-        var noise2D = new PerlinNoise2D(seed, 0.1, 1.0, 4, 2.0, 0.5);
+        var noise2D = new PerlinNoise2D(_randomFactory, seed, 0.1, 1.0, 4, 2.0, 0.5);
 
         var points = new List<Dictionary<string, double>>();
         double maxJump = 0;
@@ -201,7 +208,7 @@ public class NoiseTestController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     public IActionResult TestRegistry([FromQuery] long seed = 12345)
     {
-        var registry = new NoiseRegistry(seed);
+        var registry = new NoiseRegistry(_randomFactory, seed);
 
         // Регистрируем несколько шумов с разными настройками
         registry.RegisterNoise2D("terrain", new NoiseSettings(0.05, 1.0, 4, 2.0, 0.5));

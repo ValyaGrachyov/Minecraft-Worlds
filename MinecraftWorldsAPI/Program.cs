@@ -1,8 +1,13 @@
+using MinecraftWorldsAPI.Interfaces;
+using MinecraftWorldsAPI.Services.Random;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddSingleton<IRandomFactory, LCGRandomFactory>();
 
 var app = builder.Build();
 

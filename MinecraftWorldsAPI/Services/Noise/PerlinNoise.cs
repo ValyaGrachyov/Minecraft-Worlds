@@ -32,7 +32,7 @@ public class PerlinNoise : INoise
         222, 114, 67, 29, 24, 72, 243, 141, 128, 195, 78, 66, 215, 61, 156, 180
     };
 
-    public PerlinNoise(long seed, double frequency = 1.0, double amplitude = 1.0, int octaves = 1, double lacunarity = 2.0, double persistence = 0.5)
+    public PerlinNoise(IRandomFactory randomFactory, long seed, double frequency = 1.0, double amplitude = 1.0, int octaves = 1, double lacunarity = 2.0, double persistence = 0.5)
     {
         _frequency = frequency;
         _amplitude = amplitude;
@@ -42,7 +42,7 @@ public class PerlinNoise : INoise
 
         // Создаем таблицу перестановок на основе seed
         _permutation = new int[512];
-        var random = new System.Random((int)(seed & 0x7FFFFFFF));
+        var random = randomFactory.CreateRandom(seed);
         
         // Копируем базовую таблицу
         for (int i = 0; i < 256; i++)
@@ -53,7 +53,7 @@ public class PerlinNoise : INoise
         // Перемешиваем на основе seed
         for (int i = 0; i < 256; i++)
         {
-            int j = random.Next(256);
+            int j = random.NextInt(256);
             (_permutation[i], _permutation[j]) = (_permutation[j], _permutation[i]);
         }
 

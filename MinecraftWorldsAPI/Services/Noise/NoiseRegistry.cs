@@ -9,9 +9,11 @@ public class NoiseRegistry : INoiseRegistry
     private readonly Dictionary<string, INoise> _noises;
     private readonly Dictionary<string, INoise2D> _noises2D;
     private readonly long _seed;
+    private readonly IRandomFactory _randomFactory;
 
-    public NoiseRegistry(long seed)
+    public NoiseRegistry(IRandomFactory randomFactory, long seed)
     {
+        _randomFactory = randomFactory;
         _seed = seed;
         _noises = new Dictionary<string, INoise>();
         _noises2D = new Dictionary<string, INoise2D>();
@@ -26,6 +28,7 @@ public class NoiseRegistry : INoiseRegistry
         }
 
         var noise = new PerlinNoise(
+            _randomFactory,
             _seed,
             settings.Frequency,
             settings.Amplitude,
@@ -46,6 +49,7 @@ public class NoiseRegistry : INoiseRegistry
         }
 
         var noise = new PerlinNoise2D(
+            _randomFactory,
             _seed,
             settings.Frequency,
             settings.Amplitude,
