@@ -1,10 +1,46 @@
-using MinecraftWorldsAPI.Models;
-using MinecraftWorldsAPI.Services;
+using MinecraftWorldsAPI.Interfaces;
+using MinecraftWorldsAPI.Services.Biome;
+using MinecraftWorldsAPI.Services.Noise;
+using MinecraftWorldsAPI.Services.Random;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddSingleton<IRandomFactory, LCGRandomFactory>();
+builder.Services.AddScoped<IClimateSampler>(sp =>
+{
+    var rf = sp.GetRequiredService<IRandomFactory>();
+
+    var temperatureNoise = new PerlinNoise2D(
+        rf,
+        seed: 1001,
+        frequency: 1,
+        amplitude: 1.0,
+        octaves: 4,
+        lacunarity: 2.0,
+        persistence: 0.5
+    );
+
+    var humidityNoise = new PerlinNoise2D(
+        rf,
+        seed: 2002,
+        frequency: 0.1,
+        amplitude: 1.0,
+        octaves: 4,
+        lacunarity: 2.0,
+        persistence: 0.5
+    );
+
+    return new ClimateSampler(
+        temperatureNoise,
+        humidityNoise
+    );
+});
+
+builder.Services.AddScoped<IBiomeSource, BiomeSource>();
 
 var app = builder.Build();
 
@@ -14,32 +50,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.MapGet("/test", async (CancellationToken ct) =>
-{
-    const string worldName = "Test-World";
-
-    HashSet<int> lags = [
-        8, // water
-        9, // water
-        10, // lava
-        11, // lava
-        34, // piston top
-        212, // ice
-        219, 220, 221, 222, 223, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, // shulkers
-        
-    ];
-
-    var chunk = new Chunk(new ChunkPos(0, 0));
-    for (var x = 0; x < Chunk.SizeX; x++)
-    for (var z = 0; z < Chunk.SizeZ; z++)
-    for (var y = Chunk.DefaultMinY; y < Chunk.DefaultMaxY; y++)
-        chunk.SetBlock(x, y, z, lags.Contains(y) || Random.Shared.Next() % 2 == 0 ? Block.Air : (Block)y);
-
-    var ms = new MemoryStream();
-    await Converter.ConvertAsync(ms, [chunk], new WorldExportOption(worldName, Seed: 51651), ct);
-    ms.Position = 0;
-    
-    return Results.File(ms, "application/zip", $"{worldName}.zip");
-});
+app.MapControllers();
 
 app.Run();
