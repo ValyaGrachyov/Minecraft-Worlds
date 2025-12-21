@@ -4,7 +4,7 @@ using MinecraftWorldsAPI.Models.Enums;
 
 namespace MinecraftWorldsAPI.Services.PRNG;
 
-public class PrngFactory : IRandomFactoryWithType
+public class PrngFactory : IRandomFactory
 {
     public IRandom CreateRandom(long seed, PrngType prngType)
         => Create(seed, prngType);

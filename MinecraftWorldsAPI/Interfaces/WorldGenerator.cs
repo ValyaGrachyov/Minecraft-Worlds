@@ -1,4 +1,5 @@
 using MinecraftWorldsAPI.Models;
+using MinecraftWorldsAPI.Models.Enums;
 
 namespace MinecraftWorldsAPI.Interfaces;
 
@@ -26,7 +27,7 @@ public class WorldGeneratorExample(
 {
     public Chunk GenerateChunk(ChunkPos chunkPos, long seed)
     {
-        var random = randomFactory.CreateForChunk(seed, chunkPos, 0);
+        var random = randomFactory.CreateForChunk(seed, chunkPos, 0, PrngType.XorShift64);
 
         var chunk = new Chunk(chunkPos, -64, 320);
 

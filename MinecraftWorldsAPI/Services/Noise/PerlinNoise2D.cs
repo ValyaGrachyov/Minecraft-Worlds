@@ -1,4 +1,5 @@
 using MinecraftWorldsAPI.Interfaces;
+using MinecraftWorldsAPI.Models.Enums;
 
 namespace MinecraftWorldsAPI.Services.Noise;
 
@@ -42,7 +43,7 @@ public class PerlinNoise2D : INoise2D
 
         // Создаем таблицу перестановок на основе seed
         _permutation = new int[512];
-        var random = randomFactory.CreateRandom(seed);
+        var random = randomFactory.CreateRandom(seed, PrngType.XorShift64);
         
         // Копируем базовую таблицу
         for (int i = 0; i < 256; i++)

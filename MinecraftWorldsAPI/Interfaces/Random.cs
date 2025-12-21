@@ -52,13 +52,6 @@ public interface IRandom
 
 public interface IRandomFactory
 {
-    IRandom CreateRandom(long seed);
-
-    IRandom CreateForChunk(long worldSeed, ChunkPos chunkPos, long salt);
-}
-
-public interface IRandomFactoryWithType
-{
     IRandom CreateRandom(long seed, PrngType prngType);
 
     IRandom CreateForChunk(long worldSeed, ChunkPos chunkPos, long salt, PrngType prngType);

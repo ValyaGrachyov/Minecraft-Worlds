@@ -11,11 +11,11 @@ namespace MinecraftWorldsAPI.Controllers;
 [Tags("Prng Testing")]
 public class PrngTestController : ControllerBase
 {
-    private readonly IRandomFactoryWithType _randomFactoryWithType;
+    private readonly IRandomFactory _randomFactory;
 
-    public PrngTestController(IRandomFactoryWithType randomFactory)
+    public PrngTestController(IRandomFactory randomFactory)
     {
-        _randomFactoryWithType = randomFactory;
+        _randomFactory = randomFactory;
     }
 
     // -----------------------------
@@ -34,7 +34,7 @@ public class PrngTestController : ControllerBase
     {
         ValidateCount(count);
 
-        var rnd = _randomFactoryWithType.CreateRandom(seed, type);
+        var rnd = _randomFactory.CreateRandom(seed, type);
         return Ok(BuildResponse(rnd, seed, count));
     }
 
@@ -54,7 +54,7 @@ public class PrngTestController : ControllerBase
         ValidateCount(count);
 
         var chunkPos = new ChunkPos(x, z);
-        var rnd = _randomFactoryWithType.CreateForChunk(seed, chunkPos, salt, type);
+        var rnd = _randomFactory.CreateForChunk(seed, chunkPos, salt, type);
 
         return Ok(BuildResponse(rnd, rnd.Seed, count));
     }
@@ -77,7 +77,7 @@ public class PrngTestController : ControllerBase
 
         var chunkPos = new ChunkPos(x, z);
 
-        var baseRandom = _randomFactoryWithType.CreateForChunk(seed, chunkPos, salt, type);
+        var baseRandom = _randomFactory.CreateForChunk(seed, chunkPos, salt, type);
         var forked = baseRandom.Fork(forkSalt);
 
         return Ok(BuildResponse(forked, forked.Seed, count));
