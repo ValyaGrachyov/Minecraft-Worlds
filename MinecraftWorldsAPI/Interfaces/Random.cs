@@ -52,7 +52,7 @@ public interface IRandom
 
 public interface IRandomFactory
 {
-    IRandom CreateRandom(long seed, PrngType prngType);
+    IRandom CreateRandom(long seed, PrngType prngType = PrngType.XorShift64);
 
-    IRandom CreateForChunk(long worldSeed, ChunkPos chunkPos, long salt, PrngType prngType);
+    IRandom CreateForChunk(long worldSeed, ChunkPos chunkPos, long salt, PrngType prngType = PrngType.XorShift64);
 }

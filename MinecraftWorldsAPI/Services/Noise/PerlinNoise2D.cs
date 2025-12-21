@@ -43,7 +43,7 @@ public class PerlinNoise2D : INoise2D
 
         // Создаем таблицу перестановок на основе seed
         _permutation = new int[512];
-        var random = randomFactory.CreateRandom(seed, PrngType.XorShift64);
+        var random = randomFactory.CreateRandom(seed);
         
         // Копируем базовую таблицу
         for (int i = 0; i < 256; i++)
