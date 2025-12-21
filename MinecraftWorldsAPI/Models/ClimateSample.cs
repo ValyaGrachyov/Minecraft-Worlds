@@ -1,13 +1,7 @@
 namespace MinecraftWorldsAPI.Models;
 
-public readonly struct ClimateSample
+public readonly struct ClimateSample(double temperature, double humidity)
 {
-    public double Temperature { get; }
-    public double Humidity { get; }
-
-    public ClimateSample(double temperature, double humidity)
-    {
-        Temperature = temperature; // -1..1 или 0..1
-        Humidity = humidity;       // -1..1 или 0..1
-    }
+    public double Temperature { get; } = temperature; // -1..1 или 0..1
+    public double Humidity { get; } = humidity; // -1..1 или 0..1
 }

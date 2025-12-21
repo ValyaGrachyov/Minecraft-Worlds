@@ -1,21 +1,22 @@
-﻿using MinecraftWorldsAPI.Interfaces.noise;
+﻿using MinecraftWorldsAPI.Interfaces;
 using MinecraftWorldsAPI.Models;
 
-namespace MinecraftWorldsAPI.Interfaces.biome;
-
-public interface IClimateSampler
-{
-    ClimateSample Sample(int x, int y, int z);
-}
+namespace MinecraftWorldsAPI.Services.Biome;
 
 public sealed class ClimateSampler(
     INoise2D temperatureNoise,
     INoise2D humidityNoise) : IClimateSampler
 {
+    
+    private const double Scale = 0.01;
+    
     public ClimateSample Sample(int x, int y, int z)
     {
-        var temperature = Normalize(temperatureNoise.Sample(x, z));
-        var humidity = Normalize(humidityNoise.Sample(x, z));
+        var temperature = Normalize(
+            temperatureNoise.Sample(x * Scale, z * Scale));
+
+        var humidity = Normalize(
+            humidityNoise.Sample(x * Scale, z * Scale));
 
         return new ClimateSample(temperature, humidity);
     }

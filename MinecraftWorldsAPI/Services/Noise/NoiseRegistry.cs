@@ -1,7 +1,7 @@
 using MinecraftWorldsAPI.Interfaces;
 using MinecraftWorldsAPI.Models;
 
-namespace MinecraftWorldsAPI.Implementations;
+namespace MinecraftWorldsAPI.Services.Noise;
 
 /// Реестр шумов для хранения и получения шумов по имени
 public class NoiseRegistry : INoiseRegistry

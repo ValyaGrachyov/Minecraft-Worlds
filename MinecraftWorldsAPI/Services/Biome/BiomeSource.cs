@@ -1,24 +1,20 @@
-using MinecraftWorldsAPI.Models;
+using MinecraftWorldsAPI.Interfaces;
 
-namespace MinecraftWorldsAPI.Interfaces.biome;
+namespace MinecraftWorldsAPI.Services.Biome;
 
-public interface IBiomeSource
-{
-    Biome GetBiome(int x, int y, int z);
-}
 
 public sealed class BiomeSource(IClimateSampler climateSampler) : IBiomeSource
 {
     private static readonly BiomeClimatePoint[] Biomes =
     [
-        new(Biome.Desert,     0.9, 0.1),
-        new(Biome.Plains,     0.5, 0.4),
-        new(Biome.Forest,     0.6, 0.8),
-        new(Biome.Mountains, 0.2, 0.3),
-        new(Biome.Ocean,      0.5, 0.5)
+        new(Models.Biome.Desert,     0.9, 0.1),
+        new(Models.Biome.Plains,     0.5, 0.4),
+        new(Models.Biome.Forest,     0.6, 0.8),
+        new(Models.Biome.Mountains, 0.2, 0.3),
+        new(Models.Biome.Ocean,      0.5, 0.5)
     ];
 
-    public Biome GetBiome(int x, int y, int z)
+    public Models.Biome GetBiome(int x, int y, int z)
     {
         var climate = climateSampler.Sample(x, y, z);
 
