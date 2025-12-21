@@ -1,7 +1,13 @@
+using MinecraftWorldsAPI.Interfaces;
+using MinecraftWorldsAPI.Services.Random;
+
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddSingleton<IRandomFactory, LCGRandomFactory>();
 
 var app = builder.Build();
 
@@ -12,5 +18,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.MapGet("/test", () => "Hello, Minecraft Worlds API!");
+
+app.MapControllers();
 
 app.Run();
