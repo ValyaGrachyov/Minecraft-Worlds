@@ -1,4 +1,4 @@
-﻿namespace MinecraftWorldsAPI.PRNG;
+﻿namespace MinecraftWorldsAPI.Services.PRNG;
 
 public static class SeedMixer
 {
