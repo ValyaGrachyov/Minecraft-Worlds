@@ -2,6 +2,7 @@ using MinecraftWorldsAPI.Interfaces;
 using MinecraftWorldsAPI.Services.Biome;
 using MinecraftWorldsAPI.Services.Noise;
 using MinecraftWorldsAPI.Services.Random;
+using MinecraftWorldsAPI.Services.World;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -41,6 +42,7 @@ builder.Services.AddScoped<IClimateSampler>(sp =>
 });
 
 builder.Services.AddScoped<IBiomeSource, BiomeSource>();
+builder.Services.AddScoped<IWorldGenerator, WorldGenerator>();
 
 var app = builder.Build();
 
