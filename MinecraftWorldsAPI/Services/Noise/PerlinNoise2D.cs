@@ -1,6 +1,6 @@
 using MinecraftWorldsAPI.Interfaces;
 
-namespace MinecraftWorldsAPI.Implementations;
+namespace MinecraftWorldsAPI.Services.Noise;
 
 /// Реализация 2D шума Перлина для контроля высоты поверхности
 public class PerlinNoise2D : INoise2D

@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
-using MinecraftWorldsAPI.Implementations;
 using MinecraftWorldsAPI.Interfaces;
 using MinecraftWorldsAPI.Models;
+using MinecraftWorldsAPI.Services.Noise;
 
 namespace MinecraftWorldsAPI.Controllers;
 

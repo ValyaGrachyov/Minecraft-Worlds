@@ -1,6 +1,6 @@
 using MinecraftWorldsAPI.Interfaces;
 
-namespace MinecraftWorldsAPI.Implementations;
+namespace MinecraftWorldsAPI.Services.Noise;
 
 /// Реализация 3D шума Перлина для генерации плотности блоков
 public class PerlinNoise : INoise
