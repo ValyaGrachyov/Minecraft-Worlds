@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MinecraftWorldsAPI.Interfaces;
 using MinecraftWorldsAPI.Models;
-using MinecraftWorldsAPI.Services.Biome;
+using MinecraftWorldsAPI.Models.Enums;
 
 namespace MinecraftWorldsAPI.Controllers;
 
@@ -10,6 +10,7 @@ namespace MinecraftWorldsAPI.Controllers;
 [Route("api/[controller]")]
 [Tags("Biome Testing")]
 public sealed class BiomeTestController(
+    IRandomFactory randomFactory,
     IBiomeSource biomeSource,
     IClimateSampler climateSampler)
     : ControllerBase
@@ -21,8 +22,11 @@ public sealed class BiomeTestController(
     public IActionResult TestBiomeMap(
         [FromQuery] int width = 50,
         [FromQuery] int height = 30,
-        [FromQuery] int y = 0)
+        [FromQuery] int y = 0,
+        [FromQuery] PrngType type = PrngType.XorShift64)
     {
+        randomFactory.Type = type;
+
         var visualization = new System.Text.StringBuilder();
         var stats = new Dictionary<Biome, int>();
 
@@ -53,7 +57,7 @@ public sealed class BiomeTestController(
                 ["D"] = "Desert",
                 ["."] = "Plains",
                 ["F"] = "Forest",
-                ["^"] = "Mountains",
+                ["^"] = "ExtremeHills",
                 ["~"] = "Ocean"
             },
         });
@@ -66,8 +70,11 @@ public sealed class BiomeTestController(
     public IActionResult TestClimate(
         [FromQuery] int width = 30,
         [FromQuery] int height = 20,
-        [FromQuery] int y = 0)
+        [FromQuery] int y = 0,
+        [FromQuery] PrngType type = PrngType.XorShift64)
     {
+        randomFactory.Type = type;
+
         var temperatures = new List<List<double>>();
         var humidities = new List<List<double>>();
 
@@ -121,8 +128,11 @@ public sealed class BiomeTestController(
     public IActionResult TestSample(
         [FromQuery] int x = 10,
         [FromQuery] int y = 0,
-        [FromQuery] int z = 10)
+        [FromQuery] int z = 10,
+        [FromQuery] PrngType type = PrngType.XorShift64)
     {
+        randomFactory.Type = type;
+
         var biome = biomeSource.GetBiome(x, y, z);
         var climate = climateSampler.Sample(x, y, z);
 
@@ -140,7 +150,7 @@ public sealed class BiomeTestController(
         Biome.Desert => 'D',
         Biome.Plains => '.',
         Biome.Forest => 'F',
-        Biome.Mountains => '^',
+        Biome.ExtremeHills => '^',
         Biome.Ocean => '~',
         _ => '?'
     };
