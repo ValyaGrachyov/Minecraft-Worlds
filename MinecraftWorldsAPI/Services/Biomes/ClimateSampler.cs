@@ -1,7 +1,7 @@
 ﻿using MinecraftWorldsAPI.Interfaces;
 using MinecraftWorldsAPI.Models;
 
-namespace MinecraftWorldsAPI.Services.Biome;
+namespace MinecraftWorldsAPI.Services.Biomes;
 
 public sealed class ClimateSampler(INoiseRegistry noiseRegistry) : IClimateSampler
 {

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MinecraftWorldsAPI.Interfaces;
 using MinecraftWorldsAPI.Models;
-using MinecraftWorldsAPI.Services.Biome;
+using MinecraftWorldsAPI.Services.Biomes;
 
 namespace MinecraftWorldsAPI.Controllers;
 
