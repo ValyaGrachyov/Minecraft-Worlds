@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MinecraftWorldsAPI.Interfaces;
 using MinecraftWorldsAPI.Models;
+using MinecraftWorldsAPI.Models.Enums;
 
 namespace MinecraftWorldsAPI.Controllers;
 
@@ -10,34 +11,17 @@ namespace MinecraftWorldsAPI.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 [Tags("World Generation Testing")]
-public class WorldGenerationTestController : ControllerBase
+public class WorldGenerationTestController(
+    IRandomFactory randomFactory,
+    IDensityFunction densityFunction,
+    ITerrainGenerator terrainGenerator,
+    ICaveGenerator caveGenerator,
+    IFluidFiller fluidFiller,
+    ISurfaceBuilder surfaceBuilder,
+    IBiomeSource biomeSource,
+    INoiseRegistry noiseRegistry)
+    : ControllerBase
 {
-    private readonly IDensityFunction _densityFunction;
-    private readonly ITerrainGenerator _terrainGenerator;
-    private readonly ICaveGenerator _caveGenerator;
-    private readonly IFluidFiller _fluidFiller;
-    private readonly ISurfaceBuilder _surfaceBuilder;
-    private readonly IBiomeSource _biomeSource;
-    private readonly INoiseRegistry _noiseRegistry;
-
-    public WorldGenerationTestController(
-        IDensityFunction densityFunction,
-        ITerrainGenerator terrainGenerator,
-        ICaveGenerator caveGenerator,
-        IFluidFiller fluidFiller,
-        ISurfaceBuilder surfaceBuilder,
-        IBiomeSource biomeSource,
-        INoiseRegistry noiseRegistry)
-    {
-        _densityFunction = densityFunction;
-        _terrainGenerator = terrainGenerator;
-        _caveGenerator = caveGenerator;
-        _fluidFiller = fluidFiller;
-        _surfaceBuilder = surfaceBuilder;
-        _biomeSource = biomeSource;
-        _noiseRegistry = noiseRegistry;
-    }
-
     /// <summary>
     /// Генерирует чанк и возвращает полную статистику по всем этапам
     /// </summary>
@@ -46,33 +30,35 @@ public class WorldGenerationTestController : ControllerBase
     public IActionResult GenerateChunk(
         [FromQuery] int chunkX = 0,
         [FromQuery] int chunkZ = 0,
-        [FromQuery] long seed = 12345)
+        [FromQuery] long seed = 12345,
+        [FromQuery] PrngType type = PrngType.XorShift64)
     {
+        randomFactory.Type = type;
         var chunkPos = new ChunkPos(chunkX, chunkZ);
         var chunk = new Chunk(chunkPos, -64, 320);
 
         // Этап 1: Генерация базового ландшафта
         var statsAfterTerrain = GenerateAndGetStats(chunk, "Terrain", () =>
         {
-            _terrainGenerator.GenerateBaseTerrain(chunk, _densityFunction, _biomeSource);
+            terrainGenerator.GenerateBaseTerrain(chunk, densityFunction, biomeSource);
         });
 
         // Этап 2: Генерация пещер
         var statsAfterCaves = GenerateAndGetStats(chunk, "Caves", () =>
         {
-            _caveGenerator.Carve(chunk, _biomeSource, _noiseRegistry);
+            caveGenerator.Carve(chunk, biomeSource, noiseRegistry);
         });
 
         // Этап 3: Заполнение жидкостями
         var statsAfterFluids = GenerateAndGetStats(chunk, "Fluids", () =>
         {
-            _fluidFiller.FillFluids(chunk, _biomeSource);
+            fluidFiller.FillFluids(chunk, biomeSource);
         });
 
         // Этап 4: Построение поверхности
         var statsAfterSurface = GenerateAndGetStats(chunk, "Surface", () =>
         {
-            _surfaceBuilder.BuildSurface(chunk, _biomeSource);
+            surfaceBuilder.BuildSurface(chunk, biomeSource);
         });
 
         // Визуализация среза на уровне Y=64
@@ -110,16 +96,18 @@ public class WorldGenerationTestController : ControllerBase
         [FromQuery] int chunkX = 0,
         [FromQuery] int chunkZ = 0,
         [FromQuery] int sliceX = 8,
-        [FromQuery] long seed = 12345)
+        [FromQuery] long seed = 12345,
+        [FromQuery] PrngType type = PrngType.XorShift64)
     {
+        randomFactory.Type = type;
         var chunkPos = new ChunkPos(chunkX, chunkZ);
         var chunk = new Chunk(chunkPos, -64, 320);
 
         // Генерируем весь чанк
-        _terrainGenerator.GenerateBaseTerrain(chunk, _densityFunction, _biomeSource);
-        _caveGenerator.Carve(chunk, _biomeSource, _noiseRegistry);
-        _fluidFiller.FillFluids(chunk, _biomeSource);
-        _surfaceBuilder.BuildSurface(chunk, _biomeSource);
+        terrainGenerator.GenerateBaseTerrain(chunk, densityFunction, biomeSource);
+        caveGenerator.Carve(chunk, biomeSource, noiseRegistry);
+        fluidFiller.FillFluids(chunk, biomeSource);
+        surfaceBuilder.BuildSurface(chunk, biomeSource);
 
         // Генерируем визуализацию вертикального среза
         var visualization = new System.Text.StringBuilder();
@@ -156,16 +144,18 @@ public class WorldGenerationTestController : ControllerBase
         [FromQuery] int chunkX = 0,
         [FromQuery] int chunkZ = 0,
         [FromQuery] int sliceY = 64,
-        [FromQuery] long seed = 12345)
+        [FromQuery] long seed = 12345,
+        [FromQuery] PrngType type = PrngType.XorShift64)
     {
+        randomFactory.Type = type;
         var chunkPos = new ChunkPos(chunkX, chunkZ);
         var chunk = new Chunk(chunkPos, -64, 320);
 
         // Генерируем весь чанк
-        _terrainGenerator.GenerateBaseTerrain(chunk, _densityFunction, _biomeSource);
-        _caveGenerator.Carve(chunk, _biomeSource, _noiseRegistry);
-        _fluidFiller.FillFluids(chunk, _biomeSource);
-        _surfaceBuilder.BuildSurface(chunk, _biomeSource);
+        terrainGenerator.GenerateBaseTerrain(chunk, densityFunction, biomeSource);
+        caveGenerator.Carve(chunk, biomeSource, noiseRegistry);
+        fluidFiller.FillFluids(chunk, biomeSource);
+        surfaceBuilder.BuildSurface(chunk, biomeSource);
 
         var visualization = GenerateSliceVisualization(chunk, sliceY);
 
@@ -187,15 +177,17 @@ public class WorldGenerationTestController : ControllerBase
     public IActionResult GetGenerationStats(
         [FromQuery] int chunkX = 0,
         [FromQuery] int chunkZ = 0,
-        [FromQuery] long seed = 12345)
+        [FromQuery] long seed = 12345,
+        [FromQuery] PrngType type = PrngType.XorShift64)
     {
+        randomFactory.Type = type;
         var chunkPos = new ChunkPos(chunkX, chunkZ);
         var chunk = new Chunk(chunkPos, -64, 320);
 
         var stages = new List<object>();
 
         // После terrain
-        _terrainGenerator.GenerateBaseTerrain(chunk, _densityFunction, _biomeSource);
+        terrainGenerator.GenerateBaseTerrain(chunk, densityFunction, biomeSource);
         stages.Add(new
         {
             stage = "After Terrain",
@@ -203,7 +195,7 @@ public class WorldGenerationTestController : ControllerBase
         });
 
         // После caves
-        _caveGenerator.Carve(chunk, _biomeSource, _noiseRegistry);
+        caveGenerator.Carve(chunk, biomeSource, noiseRegistry);
         stages.Add(new
         {
             stage = "After Caves",
@@ -211,7 +203,7 @@ public class WorldGenerationTestController : ControllerBase
         });
 
         // После fluids
-        _fluidFiller.FillFluids(chunk, _biomeSource);
+        fluidFiller.FillFluids(chunk, biomeSource);
         stages.Add(new
         {
             stage = "After Fluids",
@@ -219,7 +211,7 @@ public class WorldGenerationTestController : ControllerBase
         });
 
         // После surface
-        _surfaceBuilder.BuildSurface(chunk, _biomeSource);
+        surfaceBuilder.BuildSurface(chunk, biomeSource);
         stages.Add(new
         {
             stage = "After Surface",

@@ -1,20 +1,24 @@
+using System.Text.Json.Serialization;
 using MinecraftWorldsAPI.Interfaces;
 using MinecraftWorldsAPI.Models;
 using MinecraftWorldsAPI.Services.Biomes;
 using MinecraftWorldsAPI.Services.Caves;
 using MinecraftWorldsAPI.Services.Fluids;
 using MinecraftWorldsAPI.Services.Noise;
-using MinecraftWorldsAPI.Services.Random;
+using MinecraftWorldsAPI.Services.PRNG;
 using MinecraftWorldsAPI.Services.Surface;
 using MinecraftWorldsAPI.Services.Terrain;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(opt => opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddSingleton<IRandomFactory, LCGRandomFactory>();
+builder.Services.AddSingleton<IRandomFactory, PrngFactory>();
+
+builder.Services.AddScoped<IBiomeSource, BiomeSource>();
 
 builder.Services.AddScoped<INoiseRegistry>(sp =>
 {
@@ -183,7 +187,6 @@ builder.Services.AddScoped<IClimateSampler>(sp =>
     return new ClimateSampler(noiseRegistry);
 });
 
-builder.Services.AddScoped<IBiomeSource, BiomeSource>();
 
 // Регистрация сервисов для генерации ландшафта
 builder.Services.AddScoped<IDensityFunction>(sp =>
@@ -215,6 +218,7 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.MapSwagger();
 }
 
 app.MapGet("/test", () => "Hello, Minecraft Worlds API!");

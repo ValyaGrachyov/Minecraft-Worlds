@@ -1,4 +1,5 @@
 using MinecraftWorldsAPI.Interfaces;
+using MinecraftWorldsAPI.Models.Enums;
 
 namespace MinecraftWorldsAPI.Services.Noise;
 
