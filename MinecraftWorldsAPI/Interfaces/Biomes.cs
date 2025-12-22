@@ -1,4 +1,4 @@
-﻿using MinecraftWorldsAPI.Models;
+using MinecraftWorldsAPI.Models;
 
 namespace MinecraftWorldsAPI.Interfaces;
 

@@ -221,8 +221,6 @@ if (app.Environment.IsDevelopment())
     app.MapSwagger();
 }
 
-app.MapGet("/test", () => "Hello, Minecraft Worlds API!");
-
 app.MapControllers();
 
 app.Run();

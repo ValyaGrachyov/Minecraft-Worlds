@@ -57,7 +57,7 @@ public sealed class BiomeTestController(
                 ["D"] = "Desert",
                 ["."] = "Plains",
                 ["F"] = "Forest",
-                ["^"] = "Mountains",
+                ["^"] = "ExtremeHills",
                 ["~"] = "Ocean"
             },
         });
@@ -150,7 +150,7 @@ public sealed class BiomeTestController(
         Biome.Desert => 'D',
         Biome.Plains => '.',
         Biome.Forest => 'F',
-        Biome.Mountains => '^',
+        Biome.ExtremeHills => '^',
         Biome.Ocean => '~',
         _ => '?'
     };

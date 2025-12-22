@@ -302,9 +302,9 @@ public class WorldGenerationTestController(
     /// <summary>
     /// Возвращает символ для визуализации блока
     /// </summary>
-    private static char GetBlockChar(Block block)
+    private static char GetBlockChar(BlockInfo blockInfo)
     {
-        return block switch
+        return blockInfo.Block switch
         {
             Block.Air => ' ',
             Block.Stone => '#',

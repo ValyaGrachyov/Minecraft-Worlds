@@ -1,4 +1,4 @@
-﻿namespace MinecraftWorldsAPI.Interfaces;
+namespace MinecraftWorldsAPI.Interfaces;
 
 public interface INoise
 {
