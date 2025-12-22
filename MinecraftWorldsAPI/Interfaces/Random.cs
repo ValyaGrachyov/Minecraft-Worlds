@@ -1,4 +1,6 @@
 using MinecraftWorldsAPI.Models;
+using MinecraftWorldsAPI.Models.Enums;
+using MinecraftWorldsAPI.Services.PRNG;
 
 namespace MinecraftWorldsAPI.Interfaces;
 
@@ -50,6 +52,8 @@ public interface IRandom
 
 public interface IRandomFactory
 {
+    PrngType Type { get; set; }
+
     IRandom CreateRandom(long seed);
 
     IRandom CreateForChunk(long worldSeed, ChunkPos chunkPos, long salt);

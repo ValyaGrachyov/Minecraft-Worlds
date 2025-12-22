@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MinecraftWorldsAPI.Interfaces;
 using MinecraftWorldsAPI.Models;
+using MinecraftWorldsAPI.Models.Enums;
 using MinecraftWorldsAPI.Services.Noise;
 
 namespace MinecraftWorldsAPI.Controllers;
@@ -25,6 +26,7 @@ public class NoiseTestController : ControllerBase
     /// <param name="height">Высота карты (по умолчанию: 30)</param>
     /// <param name="frequency">Частота шума (по умолчанию: 0.1)</param>
     /// <param name="octaves">Количество октав (по умолчанию: 4)</param>
+    /// <param name="type">Тип генератора случайных чисел (по умолчанию: XorShift64)</param>
     /// <returns>Результат тестирования с визуализацией</returns>
     [HttpGet("test2d")]
     [ProducesResponseType(typeof(NoiseTestResult), StatusCodes.Status200OK)]
@@ -33,8 +35,11 @@ public class NoiseTestController : ControllerBase
         [FromQuery] int width = 50,
         [FromQuery] int height = 30,
         [FromQuery] double frequency = 0.1,
-        [FromQuery] int octaves = 4)
+        [FromQuery] int octaves = 4,
+        [FromQuery] PrngType type = PrngType.XorShift64)
     {
+        _randomFactory.Type = type;
+
         var noise2D = new PerlinNoise2D(_randomFactory, seed, frequency, 1.0, octaves, 2.0, 0.5);
         var result = new NoiseTestResult();
 
@@ -99,6 +104,7 @@ public class NoiseTestController : ControllerBase
     /// <param name="size">Размер среза (по умолчанию: 10)</param>
     /// <param name="frequency">Частота шума (по умолчанию: 0.1)</param>
     /// <param name="octaves">Количество октав (по умолчанию: 4)</param>
+    /// <param name="type">Тип генератора случайных чисел (по умолчанию: XorShift64)</param>
     /// <returns>Результат тестирования 3D шума</returns>
     [HttpGet("test3d")]
     [ProducesResponseType(typeof(NoiseTestResult), StatusCodes.Status200OK)]
@@ -106,8 +112,10 @@ public class NoiseTestController : ControllerBase
         [FromQuery] long seed = 12345,
         [FromQuery] int size = 10,
         [FromQuery] double frequency = 0.1,
-        [FromQuery] int octaves = 4)
+        [FromQuery] int octaves = 4,
+        [FromQuery] PrngType type = PrngType.XorShift64)
     {
+        _randomFactory.Type = type;
         var noise3D = new PerlinNoise(_randomFactory, seed, frequency, 1.0, octaves, 2.0, 0.5);
         var result = new NoiseTestResult();
 
@@ -156,6 +164,7 @@ public class NoiseTestController : ControllerBase
     /// <param name="startY">Начальная координата Y (по умолчанию: 0)</param>
     /// <param name="steps">Количество шагов (по умолчанию: 20)</param>
     /// <param name="stepSize">Размер шага (по умолчанию: 0.1)</param>
+    /// <param name="type">Тип генератора случайных чисел (по умолчанию: XorShift64)</param>
     /// <returns>Результат проверки плавности переходов</returns>
     [HttpGet("test-smoothness")]
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -164,8 +173,10 @@ public class NoiseTestController : ControllerBase
         [FromQuery] double startX = 0,
         [FromQuery] double startY = 0,
         [FromQuery] int steps = 20,
-        [FromQuery] double stepSize = 0.1)
+        [FromQuery] double stepSize = 0.1,
+        [FromQuery] PrngType type = PrngType.XorShift64)
     {
+        _randomFactory.Type = type;
         var noise2D = new PerlinNoise2D(_randomFactory, seed, 0.1, 1.0, 4, 2.0, 0.5);
 
         var points = new List<Dictionary<string, double>>();
@@ -203,11 +214,15 @@ public class NoiseTestController : ControllerBase
     /// Тестирование реестра шумов
     /// </summary>
     /// <param name="seed">Сид для генерации (по умолчанию: 12345)</param>
+    /// <param name="type">Тип генератора случайных чисел (по умолчанию: XorShift64)</param>
     /// <returns>Результат тестирования реестра</returns>
     [HttpGet("test-registry")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public IActionResult TestRegistry([FromQuery] long seed = 12345)
+    public IActionResult TestRegistry(
+        [FromQuery] long seed = 12345,
+        [FromQuery] PrngType type = PrngType.XorShift64)
     {
+        _randomFactory.Type = type;
         var registry = new NoiseRegistry(_randomFactory, seed);
 
         // Регистрируем несколько шумов с разными настройками

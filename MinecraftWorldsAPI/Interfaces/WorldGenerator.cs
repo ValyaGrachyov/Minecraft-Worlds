@@ -1,4 +1,5 @@
 using MinecraftWorldsAPI.Models;
+using MinecraftWorldsAPI.Models.Enums;
 
 namespace MinecraftWorldsAPI.Interfaces;
 
