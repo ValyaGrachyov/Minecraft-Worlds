@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MinecraftWorldsAPI.Interfaces;
 using MinecraftWorldsAPI.Models;
+using MinecraftWorldsAPI.Models.Enums;
 
 namespace MinecraftWorldsAPI.Controllers;
 
@@ -9,28 +10,24 @@ namespace MinecraftWorldsAPI.Controllers;
 /// </summary>
 [ApiController]
 [Route("api/[controller]")]
-public class ChunkController : ControllerBase
+public class ChunkController(IRandomFactory randomFactory, IWorldGenerator worldGenerator) : ControllerBase
 {
-    private readonly IWorldGenerator _worldGenerator;
-    
-    public ChunkController(IWorldGenerator worldGenerator)
-    {
-        _worldGenerator = worldGenerator;
-    }
-    
     /// <summary>
     /// Генерирует чанк по указанным координатам и сиду
     /// </summary>
     /// <param name="x">X координата чанка</param>
     /// <param name="z">Z координата чанка</param>
     /// <param name="seed">Сид мира (опционально, по умолчанию 0)</param>
+    /// <param name="type">Тип генератора случайных чисел (по умолчанию: XorShift64)</param>
     /// <returns>Сгенерированный чанк</returns>
     [HttpGet("{x}/{z}")]
     [ProducesResponseType(typeof(ChunkResponse), StatusCodes.Status200OK)]
-    public ActionResult<ChunkResponse> GenerateChunk(int x, int z, [FromQuery] long seed = 0)
+    public ActionResult<ChunkResponse> GenerateChunk(int x, int z, [FromQuery] long seed = 0, [FromQuery] PrngType type = PrngType.XorShift64)
     {
+        randomFactory.Type = type;
+
         var chunkPos = new ChunkPos(x, z);
-        var chunk = _worldGenerator.GenerateChunk(chunkPos, seed);
+        var chunk = worldGenerator.GenerateChunk(chunkPos, seed);
         
         return Ok(new ChunkResponse
         {
@@ -51,7 +48,7 @@ public class ChunkController : ControllerBase
             {
                 for (var z = 0; z < Chunk.SizeZ; z++)
                 {
-                    blocks[x, y - chunk.MinY, z] = chunk[x, y, z];
+                    blocks[x, y - chunk.MinY, z] = chunk[x, y, z].Block;
                 }
             }
         }
