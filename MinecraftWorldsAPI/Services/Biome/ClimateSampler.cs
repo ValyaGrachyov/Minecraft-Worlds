@@ -3,15 +3,15 @@ using MinecraftWorldsAPI.Models;
 
 namespace MinecraftWorldsAPI.Services.Biome;
 
-public sealed class ClimateSampler(
-    INoise2D temperatureNoise,
-    INoise2D humidityNoise) : IClimateSampler
+public sealed class ClimateSampler(INoiseRegistry noiseRegistry) : IClimateSampler
 {
-    
     private const double Scale = 0.01;
     
     public ClimateSample Sample(int x, int y, int z)
     {
+        var temperatureNoise = noiseRegistry.GetNoise2D(NoiseNames.Temperature);
+        var humidityNoise = noiseRegistry.GetNoise2D(NoiseNames.Humidity);
+        
         var temperature = Normalize(
             temperatureNoise.Sample(x * Scale, z * Scale));
 

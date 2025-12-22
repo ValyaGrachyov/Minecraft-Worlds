@@ -1,4 +1,5 @@
 using MinecraftWorldsAPI.Interfaces;
+using MinecraftWorldsAPI.Models;
 using MinecraftWorldsAPI.Services.Biome;
 using MinecraftWorldsAPI.Services.Noise;
 using MinecraftWorldsAPI.Services.Random;
@@ -10,34 +11,43 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddSingleton<IRandomFactory, LCGRandomFactory>();
-builder.Services.AddScoped<IClimateSampler>(sp =>
-{
-    var rf = sp.GetRequiredService<IRandomFactory>();
 
+builder.Services.AddScoped<INoiseRegistry>(sp =>
+{
+    var randomFactory = sp.GetRequiredService<IRandomFactory>();
+    var registry = new NoiseRegistry(randomFactory, seed: 0); // Базовый seed, отдельные seeds для каждого шума
+
+    // Регистрируем шумы с разными seeds через готовые экземпляры
     var temperatureNoise = new PerlinNoise2D(
-        rf,
-        seed: 1001,
-        frequency: 1,
-        amplitude: 1.0,
-        octaves: 4,
-        lacunarity: 2.0,
-        persistence: 0.5
+        randomFactory,
+        seed: NoiseDefaults.TemperatureSeed,
+        frequency: NoiseDefaults.Temperature.Frequency,
+        amplitude: NoiseDefaults.Temperature.Amplitude,
+        octaves: (int)NoiseDefaults.Temperature.Octaves,
+        lacunarity: NoiseDefaults.Temperature.Lacunarity,
+        persistence: NoiseDefaults.Temperature.Persistence
     );
 
     var humidityNoise = new PerlinNoise2D(
-        rf,
-        seed: 2002,
-        frequency: 0.1,
-        amplitude: 1.0,
-        octaves: 4,
-        lacunarity: 2.0,
-        persistence: 0.5
+        randomFactory,
+        seed: NoiseDefaults.HumiditySeed,
+        frequency: NoiseDefaults.Humidity.Frequency,
+        amplitude: NoiseDefaults.Humidity.Amplitude,
+        octaves: (int)NoiseDefaults.Humidity.Octaves,
+        lacunarity: NoiseDefaults.Humidity.Lacunarity,
+        persistence: NoiseDefaults.Humidity.Persistence
     );
 
-    return new ClimateSampler(
-        temperatureNoise,
-        humidityNoise
-    );
+    registry.RegisterNoise2D(NoiseNames.Temperature, temperatureNoise);
+    registry.RegisterNoise2D(NoiseNames.Humidity, humidityNoise);
+
+    return registry;
+});
+
+builder.Services.AddScoped<IClimateSampler>(sp =>
+{
+    var noiseRegistry = sp.GetRequiredService<INoiseRegistry>();
+    return new ClimateSampler(noiseRegistry);
 });
 
 builder.Services.AddScoped<IBiomeSource, BiomeSource>();
