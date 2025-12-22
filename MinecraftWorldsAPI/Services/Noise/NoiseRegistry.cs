@@ -3,7 +3,7 @@ using MinecraftWorldsAPI.Models;
 
 namespace MinecraftWorldsAPI.Services.Noise;
 
-/// Реестр шумов для хранения и получения шумов по имени
+// Реестр шумов для хранения и получения шумов по имени
 public class NoiseRegistry : INoiseRegistry
 {
     private readonly Dictionary<string, INoise> _noises;
@@ -22,10 +22,7 @@ public class NoiseRegistry : INoiseRegistry
     /// Регистрирует 3D шум с заданными настройками
     public void RegisterNoise(string name, NoiseSettings? settings = null)
     {
-        if (settings == null)
-        {
-            settings = new NoiseSettings(1.0, 1.0, 1, 2.0, 0.5);
-        }
+        settings ??= NoiseDefaults.Default;
 
         var noise = new PerlinNoise(
             _randomFactory,
@@ -40,13 +37,10 @@ public class NoiseRegistry : INoiseRegistry
         _noises[name] = noise;
     }
 
-    /// Регистрирует 2D шум с заданными настройками
+    // Регистрирует 2D шум с заданными настройками
     public void RegisterNoise2D(string name, NoiseSettings? settings = null)
     {
-        if (settings == null)
-        {
-            settings = new NoiseSettings(1.0, 1.0, 1, 2.0, 0.5);
-        }
+        settings ??= NoiseDefaults.Default;
 
         var noise = new PerlinNoise2D(
             _randomFactory,
@@ -61,13 +55,13 @@ public class NoiseRegistry : INoiseRegistry
         _noises2D[name] = noise;
     }
 
-    /// Регистрирует готовый 3D шум
+    // Регистрирует готовый 3D шум
     public void RegisterNoise(string name, INoise noise)
     {
         _noises[name] = noise;
     }
 
-    /// Регистрирует готовый 2D шум
+    // Регистрирует готовый 2D шум
     public void RegisterNoise2D(string name, INoise2D noise)
     {
         _noises2D[name] = noise;
@@ -93,13 +87,13 @@ public class NoiseRegistry : INoiseRegistry
         return noise;
     }
 
-    /// Проверяет, зарегистрирован ли шум с указанным именем
+    // Проверяет, зарегистрирован ли шум с указанным именем
     public bool HasNoise(string name)
     {
         return _noises.ContainsKey(name);
     }
 
-    /// Проверяет, зарегистрирован ли 2D шум с указанным именем
+    // Проверяет, зарегистрирован ли 2D шум с указанным именем
     public bool HasNoise2D(string name)
     {
         return _noises2D.ContainsKey(name);

@@ -1,6 +1,7 @@
 using MinecraftWorldsAPI.Interfaces;
+using MinecraftWorldsAPI.Models;
 
-namespace MinecraftWorldsAPI.Services.Biome;
+namespace MinecraftWorldsAPI.Services.Biomes;
 
 
 public sealed class BiomeSource(IClimateSampler climateSampler) : IBiomeSource
@@ -14,7 +15,7 @@ public sealed class BiomeSource(IClimateSampler climateSampler) : IBiomeSource
         new(Models.Biome.Ocean,      0.5, 0.5)
     ];
 
-    public Models.Biome GetBiome(int x, int y, int z)
+    public Biome GetBiome(int x, int y, int z)
     {
         var climate = climateSampler.Sample(x, y, z);
 
