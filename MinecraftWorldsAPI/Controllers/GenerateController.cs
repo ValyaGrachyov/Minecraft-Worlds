@@ -32,7 +32,7 @@ public class GenerateController(IRandomFactory randomFactory, IWorldGenerator wo
         for (var z = chunkZ - chunks; z <= chunkZ + chunks; z++)
             res.Add(worldGenerator.GenerateChunk(new ChunkPos(x, z), seedLong));
 
-        using var ms = new MemoryStream();
+        var ms = new MemoryStream();
         await Converter.ConvertAsync(ms, res, new WorldExportOption(worldName, Seed: seedLong), ct);
         ms.Position = 0;
 
