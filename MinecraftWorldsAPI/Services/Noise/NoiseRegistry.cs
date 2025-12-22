@@ -4,20 +4,10 @@ using MinecraftWorldsAPI.Models;
 namespace MinecraftWorldsAPI.Services.Noise;
 
 // Реестр шумов для хранения и получения шумов по имени
-public class NoiseRegistry : INoiseRegistry
+public class NoiseRegistry(IRandomFactory randomFactory, long seed) : INoiseRegistry
 {
-    private readonly Dictionary<string, INoise> _noises;
-    private readonly Dictionary<string, INoise2D> _noises2D;
-    private readonly long _seed;
-    private readonly IRandomFactory _randomFactory;
-
-    public NoiseRegistry(IRandomFactory randomFactory, long seed)
-    {
-        _randomFactory = randomFactory;
-        _seed = seed;
-        _noises = new Dictionary<string, INoise>();
-        _noises2D = new Dictionary<string, INoise2D>();
-    }
+    private readonly Dictionary<string, INoise> _noises = new();
+    private readonly Dictionary<string, INoise2D> _noises2D = new();
 
     /// Регистрирует 3D шум с заданными настройками
     public void RegisterNoise(string name, NoiseSettings? settings = null)
@@ -25,8 +15,8 @@ public class NoiseRegistry : INoiseRegistry
         settings ??= NoiseDefaults.Default;
 
         var noise = new PerlinNoise(
-            _randomFactory,
-            _seed,
+            randomFactory,
+            seed,
             settings.Frequency,
             settings.Amplitude,
             (int)settings.Octaves,
@@ -43,8 +33,8 @@ public class NoiseRegistry : INoiseRegistry
         settings ??= NoiseDefaults.Default;
 
         var noise = new PerlinNoise2D(
-            _randomFactory,
-            _seed,
+            randomFactory,
+            seed,
             settings.Frequency,
             settings.Amplitude,
             (int)settings.Octaves,

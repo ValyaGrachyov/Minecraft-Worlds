@@ -8,6 +8,7 @@ using MinecraftWorldsAPI.Services.Noise;
 using MinecraftWorldsAPI.Services.PRNG;
 using MinecraftWorldsAPI.Services.Surface;
 using MinecraftWorldsAPI.Services.Terrain;
+using MinecraftWorldsAPI.Services.World;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -211,6 +212,8 @@ builder.Services.AddScoped<ISurfaceBuilder>(sp =>
     var randomFactory = sp.GetRequiredService<IRandomFactory>();
     return new SurfaceBuilder(noiseRegistry, randomFactory);
 });
+
+builder.Services.AddScoped<IWorldGenerator, WorldGenerator>();
 
 var app = builder.Build();
 
