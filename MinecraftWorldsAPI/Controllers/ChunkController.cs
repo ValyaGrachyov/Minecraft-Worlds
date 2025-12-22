@@ -28,7 +28,7 @@ public class ChunkController(IRandomFactory randomFactory, IWorldGenerator world
 
         var chunkPos = new ChunkPos(x, z);
         var chunk = worldGenerator.GenerateChunk(chunkPos, seed);
-        
+
         return Ok(new ChunkResponse
         {
             Position = chunkPos,
@@ -38,17 +38,19 @@ public class ChunkController(IRandomFactory randomFactory, IWorldGenerator world
         });
     }
     
-    private static Block[,,] ConvertChunkToArray(Chunk chunk)
+    private static Block[][][] ConvertChunkToArray(Chunk chunk)
     {
-        var blocks = new Block[Chunk.SizeX, chunk.MaxY - chunk.MinY + 1, Chunk.SizeZ];
+        var blocks = new Block[Chunk.SizeX][][];
         
         for (var x = 0; x < Chunk.SizeX; x++)
         {
+            blocks[x] = new Block[chunk.MaxY - chunk.MinY + 1][];
             for (var y = chunk.MinY; y <= chunk.MaxY; y++)
             {
+                blocks[x][y - chunk.MinY] = new Block[Chunk.SizeZ];
                 for (var z = 0; z < Chunk.SizeZ; z++)
                 {
-                    blocks[x, y - chunk.MinY, z] = chunk[x, y, z].Block;
+                    blocks[x][y - chunk.MinY][z] = chunk[x, y, z].Block;
                 }
             }
         }
@@ -65,5 +67,5 @@ public class ChunkResponse
     public ChunkPos Position { get; set; }
     public int MinY { get; set; }
     public int MaxY { get; set; }
-    public Block[,,] Blocks { get; set; } = null!;
+    public Block[][][] Blocks { get; set; } = null!;
 }
