@@ -28,7 +28,7 @@ public class WorldGeneratorExample(
     {
         var random = randomFactory.CreateForChunk(seed, chunkPos, 0);
 
-        var chunk = new Chunk(chunkPos, -64, 320);
+        var chunk = new Chunk(chunkPos, 0, 255);
 
         terrainGenerator.GenerateBaseTerrain(chunk, densityFunction, biomeSource);
 

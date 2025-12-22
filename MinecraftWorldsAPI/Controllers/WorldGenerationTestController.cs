@@ -35,7 +35,7 @@ public class WorldGenerationTestController(
     {
         randomFactory.Type = type;
         var chunkPos = new ChunkPos(chunkX, chunkZ);
-        var chunk = new Chunk(chunkPos, -64, 320);
+        var chunk = new Chunk(chunkPos, 0, 255);
 
         // Этап 1: Генерация базового ландшафта
         var statsAfterTerrain = GenerateAndGetStats(chunk, "Terrain", () =>
@@ -101,7 +101,7 @@ public class WorldGenerationTestController(
     {
         randomFactory.Type = type;
         var chunkPos = new ChunkPos(chunkX, chunkZ);
-        var chunk = new Chunk(chunkPos, -64, 320);
+        var chunk = new Chunk(chunkPos, 0, 255);
 
         // Генерируем весь чанк
         terrainGenerator.GenerateBaseTerrain(chunk, densityFunction, biomeSource);
@@ -149,7 +149,7 @@ public class WorldGenerationTestController(
     {
         randomFactory.Type = type;
         var chunkPos = new ChunkPos(chunkX, chunkZ);
-        var chunk = new Chunk(chunkPos, -64, 320);
+        var chunk = new Chunk(chunkPos, 0, 255);
 
         // Генерируем весь чанк
         terrainGenerator.GenerateBaseTerrain(chunk, densityFunction, biomeSource);
@@ -182,7 +182,7 @@ public class WorldGenerationTestController(
     {
         randomFactory.Type = type;
         var chunkPos = new ChunkPos(chunkX, chunkZ);
-        var chunk = new Chunk(chunkPos, -64, 320);
+        var chunk = new Chunk(chunkPos, 0, 255);
 
         var stages = new List<object>();
 

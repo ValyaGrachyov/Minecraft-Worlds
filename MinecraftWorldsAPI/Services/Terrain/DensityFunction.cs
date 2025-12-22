@@ -7,31 +7,17 @@ namespace MinecraftWorldsAPI.Services.Terrain;
 /// Реализация функции плотности для генерации ландшафта
 /// Основана на алгоритме Minecraft: использует y_clamped_gradient, 3D шум и параметры биома
 /// </summary>
-public class DensityFunction : IDensityFunction
+public class DensityFunction(INoiseRegistry noiseRegistry, IBiomeSource biomeSource, int minY = 0, int maxY = 255)
+    : IDensityFunction
 {
-    private readonly INoiseRegistry _noiseRegistry;
-    private readonly IBiomeSource _biomeSource;
-    private readonly int _minY;
-    private readonly int _maxY;
-
     // Параметры для y_clamped_gradient
-    private const int FromY = -64;
-    private const int ToY = 320;
     private const double FromValue = 1.0;  // Плотность на дне
-    private const double ToValue = -1.0;    // Плотность на верху
+    private const double ToValue = -3.0;    // Плотность на верху
 
     // Масштабы для шумов
     private const double DensityXZScale = 0.1;  // Масштаб по X/Z для 3D шума
     private const double DensityYScale = 0.1;   // Масштаб по Y для 3D шума
     private const double TerrainXZScale = 0.05;   // Масштаб для 2D шумов (continents, erosion, ridges)
-
-    public DensityFunction(INoiseRegistry noiseRegistry, IBiomeSource biomeSource, int minY = -64, int maxY = 320)
-    {
-        _noiseRegistry = noiseRegistry;
-        _biomeSource = biomeSource;
-        _minY = minY;
-        _maxY = maxY;
-    }
 
     /// <summary>
     /// Вычисляет плотность для блока в позиции (x, y, z)
@@ -43,17 +29,17 @@ public class DensityFunction : IDensityFunction
         var baseDensity = ComputeYClampedGradient(y);
 
         // 2. Получаем параметры биома для этой позиции
-        var biome = _biomeSource.GetBiome(x, y, z);
+        var biome = biomeSource.GetBiome(x, y, z);
         var biomeParams = GetBiomeParameters(biome);
 
         // 3. Вычисляем 2D шумы для сплайнов (continents, erosion, ridges)
-        var continents = _noiseRegistry.GetNoise2D(NoiseNames.Continents)
+        var continents = noiseRegistry.GetNoise2D(NoiseNames.Continents)
             .Sample(x * TerrainXZScale, z * TerrainXZScale);
         
-        var erosion = _noiseRegistry.GetNoise2D(NoiseNames.Erosion)
+        var erosion = noiseRegistry.GetNoise2D(NoiseNames.Erosion)
             .Sample(x * TerrainXZScale, z * TerrainXZScale);
         
-        var ridges = _noiseRegistry.GetNoise2D(NoiseNames.Ridges)
+        var ridges = noiseRegistry.GetNoise2D(NoiseNames.Ridges)
             .Sample(x * TerrainXZScale, z * TerrainXZScale);
 
         // 4. Применяем влияние параметров на базовую высоту
@@ -70,7 +56,7 @@ public class DensityFunction : IDensityFunction
         var heightShift = heightOffset - erosionEffect + ridgesEffect;
 
         // 6. Применяем 3D шум для создания объемных форм (overhangs, пещеры будут позже)
-        var densityNoise = _noiseRegistry.GetNoise(NoiseNames.Density)
+        var densityNoise = noiseRegistry.GetNoise(NoiseNames.Density)
             .Sample(x * DensityXZScale, y * DensityYScale, z * DensityXZScale);
 
         // 7. Комбинируем все компоненты
@@ -83,13 +69,13 @@ public class DensityFunction : IDensityFunction
     /// <summary>
     /// Вычисляет y_clamped_gradient: линейно интерполирует плотность от from_y к to_y
     /// </summary>
-    private static double ComputeYClampedGradient(int y)
+    private double ComputeYClampedGradient(int y)
     {
         // Ограничиваем Y между from_y и to_y
-        var clampedY = Math.Clamp(y, FromY, ToY);
+        var clampedY = Math.Clamp(y, minY, maxY);
         
         // Линейная интерполяция
-        var t = (double)(clampedY - FromY) / (ToY - FromY);
+        var t = (double)(clampedY - minY) / (maxY - minY);
         return FromValue + (ToValue - FromValue) * t;
     }
 

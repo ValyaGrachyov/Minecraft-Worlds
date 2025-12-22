@@ -14,8 +14,8 @@ public class CaveGenerator : ICaveGenerator
     private const double CaveYScale = 0.05;   // Масштаб по Y
 
     // Диапазон генерации пещер (от -59 до 256 по документации, но используем весь чанк)
-    private const int CaveMinY = -64;
-    private const int CaveMaxY = 320;
+    private const int CaveMinY = 0;
+    private const int CaveMaxY = 255;
 
     public void Carve(Chunk chunk, IBiomeSource biomeSource, INoiseRegistry noiseRegistry)
     {

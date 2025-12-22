@@ -13,7 +13,7 @@ public class FluidFiller : IFluidFiller
     private const int SeaLevel = 63;
 
     // Минимальная глубина для заполнения подземных полостей водой
-    private const int UndergroundWaterMinY = -64;
+    private const int UndergroundWaterMinY = 0;
 
     public void FillFluids(Chunk chunk, IBiomeSource biomeSource)
     {
