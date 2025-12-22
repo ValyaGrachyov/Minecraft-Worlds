@@ -1,5 +1,6 @@
 using MinecraftWorldsAPI.Interfaces;
 using MinecraftWorldsAPI.Services.Biome;
+using MinecraftWorldsAPI.Services.Feature;
 using MinecraftWorldsAPI.Services.Noise;
 using MinecraftWorldsAPI.Services.Random;
 
@@ -41,6 +42,8 @@ builder.Services.AddScoped<IClimateSampler>(sp =>
 });
 
 builder.Services.AddScoped<IBiomeSource, BiomeSource>();
+builder.Services.AddSingleton<IFeatureRegistry, FeatureRegistry>();
+
 
 var app = builder.Build();
 

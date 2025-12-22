@@ -6,5 +6,7 @@ public enum Block
     Stone,
     Dirt,
     Grass,
-    Water
+    Water,
+    Log,    // ствол дерева
+    Leaves, // крона дерева
 }
