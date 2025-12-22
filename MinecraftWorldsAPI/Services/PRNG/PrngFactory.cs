@@ -6,23 +6,24 @@ namespace MinecraftWorldsAPI.Services.PRNG;
 
 public class PrngFactory : IRandomFactory
 {
-    public IRandom CreateRandom(long seed, PrngType prngType)
-        => Create(seed, prngType);
+    public PrngType Type { get; set; } = PrngType.XorShift64;
+
+    public IRandom CreateRandom(long seed)
+        => Create(seed);
 
     public IRandom CreateForChunk(
         long worldSeed,
         ChunkPos chunkPos,
-        long salt,
-        PrngType prngType)
+        long salt)
     {
         long s = SeedMixer.Mix(worldSeed, chunkPos.X, chunkPos.Z);
         s = SeedMixer.Mix(s, salt);
 
-        return Create(s, prngType);
+        return Create(s);
     }
 
-    private static IRandom Create(long seed, PrngType prngType)
-        => prngType switch
+    private IRandom Create(long seed)
+        => Type switch
     {
         PrngType.MersenneTwister => new MersenneTwisterRandom(seed),
         _ => new XorShift64Random(seed)

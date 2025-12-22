@@ -5,7 +5,7 @@ namespace MinecraftWorldsAPI.Interfaces;
 
 public interface IWorldGenerator
 {
-    Chunk GenerateChunk(ChunkPos chunkPos, long seed, PrngType prngType = PrngType.XorShift64);
+    Chunk GenerateChunk(ChunkPos chunkPos, long seed);
 }
 
 public class WorldGeneratorExample(
@@ -25,9 +25,9 @@ public class WorldGeneratorExample(
     IFeatureGenerator featureGenerator
 ) : IWorldGenerator
 {
-    public Chunk GenerateChunk(ChunkPos chunkPos, long seed, PrngType prngType)
+    public Chunk GenerateChunk(ChunkPos chunkPos, long seed)
     {
-        var random = randomFactory.CreateForChunk(seed, chunkPos, 0, prngType);
+        var random = randomFactory.CreateForChunk(seed, chunkPos, 0);
 
         var chunk = new Chunk(chunkPos, -64, 320);
 

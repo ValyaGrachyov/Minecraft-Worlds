@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using MinecraftWorldsAPI.Interfaces;
 using MinecraftWorldsAPI.Services.Biome;
 using MinecraftWorldsAPI.Services.Noise;
@@ -5,7 +6,8 @@ using MinecraftWorldsAPI.Services.PRNG;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(opt => opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 

@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using MinecraftWorldsAPI.Interfaces;
 using MinecraftWorldsAPI.Models;
 using MinecraftWorldsAPI.Models.Enums;
@@ -9,15 +8,8 @@ namespace MinecraftWorldsAPI.Controllers;
 [ApiController]
 [Route("api/prng/[action]")]
 [Tags("Prng Testing")]
-public class PrngTestController : ControllerBase
+public class PrngTestController(IRandomFactory randomFactory) : ControllerBase
 {
-    private readonly IRandomFactory _randomFactory;
-
-    public PrngTestController(IRandomFactory randomFactory)
-    {
-        _randomFactory = randomFactory;
-    }
-
     // -----------------------------
     // Public endpoints
     // -----------------------------
@@ -34,7 +26,8 @@ public class PrngTestController : ControllerBase
     {
         ValidateCount(count);
 
-        var rnd = _randomFactory.CreateRandom(seed, type);
+        randomFactory.Type = type;
+        var rnd = randomFactory.CreateRandom(seed);
         return Ok(BuildResponse(rnd, seed, count));
     }
 
@@ -54,7 +47,8 @@ public class PrngTestController : ControllerBase
         ValidateCount(count);
 
         var chunkPos = new ChunkPos(x, z);
-        var rnd = _randomFactory.CreateForChunk(seed, chunkPos, salt, type);
+        randomFactory.Type = type;
+        var rnd = randomFactory.CreateForChunk(seed, chunkPos, salt);
 
         return Ok(BuildResponse(rnd, rnd.Seed, count));
     }
@@ -77,7 +71,8 @@ public class PrngTestController : ControllerBase
 
         var chunkPos = new ChunkPos(x, z);
 
-        var baseRandom = _randomFactory.CreateForChunk(seed, chunkPos, salt, type);
+        randomFactory.Type = type;
+        var baseRandom = randomFactory.CreateForChunk(seed, chunkPos, salt);
         var forked = baseRandom.Fork(forkSalt);
 
         return Ok(BuildResponse(forked, forked.Seed, count));
