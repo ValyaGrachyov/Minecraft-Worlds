@@ -27,7 +27,7 @@ public class ConverterTestController : ControllerBase
         for (var x = 0; x < Chunk.SizeX; x++)
         for (var z = 0; z < Chunk.SizeZ; z++)
         for (var y = Chunk.DefaultMinY; y < Chunk.DefaultMaxY; y++)
-            chunk.SetBlock(x, y, z, lags.Contains(y) || Random.Shared.Next() % 2 == 0 ? Block.Air : (Block)y);
+            chunk[x, y, z] = lags.Contains(y) || Random.Shared.Next() % 2 == 0 ? Block.Air : (Block)y;
 
         var ms = new MemoryStream();
         await Converter.ConvertAsync(ms, [chunk], new WorldExportOption(worldName, Seed: 51651), ct);

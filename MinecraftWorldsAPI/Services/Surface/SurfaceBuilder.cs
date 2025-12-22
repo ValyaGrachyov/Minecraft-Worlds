@@ -230,7 +230,7 @@ public class SurfaceBuilder : ISurfaceBuilder
 
         // Mountains: Stone на поверхности
         rules.Add(new ConditionRule(
-            new BiomeCondition(Biome.Mountains),
+            new BiomeCondition(Biome.ExtremeHills),
             new SequenceRule(
                 new ConditionRule(
                     new StoneDepthCondition(StoneDepthCondition.SurfaceType.Floor, 0),

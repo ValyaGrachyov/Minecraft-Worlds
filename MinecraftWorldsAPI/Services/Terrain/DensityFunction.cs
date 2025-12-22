@@ -114,7 +114,7 @@ public class DensityFunction(INoiseRegistry noiseRegistry, IBiomeSource biomeSou
                 ErosionMultiplier: 0.4,
                 RidgesMultiplier: 0.4
             ),
-            Biome.Mountains => new BiomeTerrainParameters(
+            Biome.ExtremeHills => new BiomeTerrainParameters(
                 HeightMultiplier: 1.5,     // Высокий рельеф
                 DensityMultiplier: 0.8,     // Больше вариаций
                 ContinentsMultiplier: 0.8,  // Высокая континентальность

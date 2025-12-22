@@ -207,20 +207,22 @@ public static class Converter
 
     private static byte[] BuildBiomes(Chunk chunk)
     {
-        var res = new byte[Chunk.SizeX * Chunk.SizeZ];
-        for (var x = 0; x < Chunk.SizeX; x++)
-        for (var z = 0; z < Chunk.SizeZ; z++)
-            res[x + z * Chunk.SizeX] = (byte)chunk.GetBiome(x, z);
-        return res;
+        return new byte[Chunk.SizeX * Chunk.SizeZ];
+        // var res = new byte[Chunk.SizeX * Chunk.SizeZ];
+        // for (var x = 0; x < Chunk.SizeX; x++)
+        // for (var z = 0; z < Chunk.SizeZ; z++)
+        //     res[x + z * Chunk.SizeX] = (byte)chunk.GetBiome(x, z);
+        // return res;
     }
 
     private static int[] BuildHeightMap(Chunk chunk)
     {
-        var res = new int[Chunk.SizeX * Chunk.SizeZ];
-        for (var x = 0; x < Chunk.SizeX; x++)
-        for (var z = 0; z < Chunk.SizeZ; z++)
-            res[x + z * Chunk.SizeX] = chunk.GetHeight(x, z);
-        return res;
+        return new int[Chunk.SizeX * Chunk.SizeZ];
+        // var res = new int[Chunk.SizeX * Chunk.SizeZ];
+        // for (var x = 0; x < Chunk.SizeX; x++)
+        // for (var z = 0; z < Chunk.SizeZ; z++)
+        //     res[x + z * Chunk.SizeX] = chunk.GetHeight(x, z);
+        // return res;
     }
 
     private static NbtCompound? BuildSection(Chunk chunk, int sectionY)
@@ -246,7 +248,7 @@ public static class Converter
             for (var z = 0; z < Chunk.SizeZ; z++)
             for (var x = 0; x < Chunk.SizeX; x++)
             {
-                var block = chunk.GetBlock(x, worldY, z);
+                var block = chunk[x, worldY, z];
 
                 var index = IndexInSection(x, y, z);
 

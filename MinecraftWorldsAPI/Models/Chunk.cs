@@ -28,12 +28,9 @@ public sealed class Chunk
         _heights = new int[SizeX, SizeZ];
     }
 
-    public void SetBlock(int x, int y, int z, BlockInfo block) => _blocks[x, y - MinY, z] = block;
-    public BlockInfo GetBlock(int x, int y, int z) => _blocks[x, y - MinY, z];
-
-    public void SetBiome(int x, int z, Biome biome) => _biomes[x, z] = biome;
-    public Biome GetBiome(int x, int z) => _biomes[x, z];
-
-    public void SetHeight(int x, int z, int height) => _heights[x, z] = height;
-    public int GetHeight(int x, int z) => _heights[x, z];
+    public BlockInfo this[int x, int y, int z]
+    {
+        get => _blocks[x, y - MinY, z];
+        set => _blocks[x, y - MinY, z] = value;
+    }
 }
