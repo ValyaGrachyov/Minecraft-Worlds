@@ -2,7 +2,6 @@
 using MinecraftWorldsAPI.Interfaces;
 using MinecraftWorldsAPI.Models;
 using MinecraftWorldsAPI.Models.Enums;
-using MinecraftWorldsAPI.Services.Biome;
 
 namespace MinecraftWorldsAPI.Controllers;
 

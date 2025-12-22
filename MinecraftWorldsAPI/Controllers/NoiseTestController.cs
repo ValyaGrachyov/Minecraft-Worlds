@@ -10,14 +10,8 @@ namespace MinecraftWorldsAPI.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 [Tags("Noise Testing")]
-public class NoiseTestController : ControllerBase
+public class NoiseTestController(IRandomFactory randomFactory) : ControllerBase
 {
-    private readonly IRandomFactory _randomFactory;
-
-    public NoiseTestController(IRandomFactory randomFactory)
-    {
-        _randomFactory = randomFactory;
-    }
     /// <summary>
     /// Тестирование 2D шума с визуализацией
     /// </summary>
@@ -38,9 +32,9 @@ public class NoiseTestController : ControllerBase
         [FromQuery] int octaves = 4,
         [FromQuery] PrngType type = PrngType.XorShift64)
     {
-        _randomFactory.Type = type;
+        randomFactory.Type = type;
 
-        var noise2D = new PerlinNoise2D(_randomFactory, seed, frequency, 1.0, octaves, 2.0, 0.5);
+        var noise2D = new PerlinNoise2D(randomFactory, seed, frequency, 1.0, octaves, 2.0, 0.5);
         var result = new NoiseTestResult();
 
         var values = new List<List<double>>();
@@ -115,8 +109,8 @@ public class NoiseTestController : ControllerBase
         [FromQuery] int octaves = 4,
         [FromQuery] PrngType type = PrngType.XorShift64)
     {
-        _randomFactory.Type = type;
-        var noise3D = new PerlinNoise(_randomFactory, seed, frequency, 1.0, octaves, 2.0, 0.5);
+        randomFactory.Type = type;
+        var noise3D = new PerlinNoise(randomFactory, seed, frequency, 1.0, octaves, 2.0, 0.5);
         var result = new NoiseTestResult();
 
         var values = new List<List<double>>();
@@ -176,8 +170,8 @@ public class NoiseTestController : ControllerBase
         [FromQuery] double stepSize = 0.1,
         [FromQuery] PrngType type = PrngType.XorShift64)
     {
-        _randomFactory.Type = type;
-        var noise2D = new PerlinNoise2D(_randomFactory, seed, 0.1, 1.0, 4, 2.0, 0.5);
+        randomFactory.Type = type;
+        var noise2D = new PerlinNoise2D(randomFactory, seed, 0.1, 1.0, 4, 2.0, 0.5);
 
         var points = new List<Dictionary<string, double>>();
         double maxJump = 0;
@@ -222,8 +216,8 @@ public class NoiseTestController : ControllerBase
         [FromQuery] long seed = 12345,
         [FromQuery] PrngType type = PrngType.XorShift64)
     {
-        _randomFactory.Type = type;
-        var registry = new NoiseRegistry(_randomFactory, seed);
+        randomFactory.Type = type;
+        var registry = new NoiseRegistry(randomFactory, seed);
 
         // Регистрируем несколько шумов с разными настройками
         registry.RegisterNoise2D("terrain", new NoiseSettings(0.05, 1.0, 4, 2.0, 0.5));
